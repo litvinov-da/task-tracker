@@ -1,9 +1,13 @@
-find_package(Qt6 REQUIRED COMPONENTS Core Sql)
+find_package(Qt5 REQUIRED COMPONENTS Core Sql Test Network)
 
-set(SOURCES "server.cpp")
+set(SOURCES "main.cpp"
+    "server.cpp"
+    "server.h")
 
 add_executable(Server
     ${SOURCES}
 )
 
-target_link_libraries(Server PRIVATE Qt6::Core Qt6::Sql)
+set(QT_DEBUG_PLUGINS True)
+
+target_link_libraries(Server PRIVATE Qt5::Core Qt5::Network Qt5::Sql)
