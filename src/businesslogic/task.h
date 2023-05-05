@@ -7,10 +7,10 @@
 class Employee;
 
 enum TaskStatus {
-    noResponsible,
+    noResponsible, //change to notSet
     onWork,
     done,
-    overdue
+    overdue //delete
 };
 
 class Task

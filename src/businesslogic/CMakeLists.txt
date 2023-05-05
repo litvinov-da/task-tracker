@@ -1,4 +1,4 @@
-find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt5 REQUIRED COMPONENTS Core)
 
 set(SOURCES
     employee.cpp
@@ -11,4 +11,4 @@ add_library(business_logic
     ${SOURCES}
     )
 
-target_link_libraries(business_logic PRIVATE Qt6::Core)
+target_link_libraries(business_logic PRIVATE Qt5::Core)
