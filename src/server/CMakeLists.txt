@@ -2,7 +2,11 @@ find_package(Qt5 REQUIRED COMPONENTS Core Sql Test Network)
 
 set(SOURCES "main.cpp"
     "server.cpp"
-    "server.h")
+    "server.h"
+    "logger.h"
+    "consolelogger.cpp"
+    "consolelogger.h"
+    )
 
 add_executable(Server
     ${SOURCES}

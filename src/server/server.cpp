@@ -9,6 +9,8 @@
 #include <QSqlTableModel>
 #include <QTcpSocket>
 
+#include "consolelogger.h"
+
 Server::Server()
     : port(2323)
     , address(QHostAddress::Any)
@@ -17,6 +19,18 @@ Server::Server()
     , dbUserName("server")
     , dbName("server")
     , dbPassword("passwordserver")
+    , logger(new ConsoleLogger())
+{}
+
+Server::Server(ILogger *_logger)
+    : port(2323)
+    , address(QHostAddress::Any)
+    , dbDriver("QPSQL")
+    , dbHost("localhost")
+    , dbUserName("server")
+    , dbName("server")
+    , dbPassword("passwordserver")
+    , logger(_logger)
 {}
 
 Server::Server(int _port, const QHostAddress &_address)
@@ -27,6 +41,23 @@ Server::Server(int _port, const QHostAddress &_address)
     , dbUserName("server")
     , dbName("server")
     , dbPassword("passwordserver")
+    , logger(new ConsoleLogger())
+{}
+
+Server::Server(const QString &_dbDriver
+               , const QString &_dbHost
+               , const QString &_dbName
+               , const QString &_dbUserName
+               , const QString &_dbPassword
+               )
+    : port(2323)
+    , address(QHostAddress::Any)
+    , dbDriver(_dbDriver)
+    , dbHost(_dbHost)
+    , dbUserName(_dbUserName)
+    , dbName(_dbName)
+    , dbPassword(_dbPassword)
+    , logger(new ConsoleLogger())
 {}
 
 Server::Server(int _port
@@ -36,6 +67,7 @@ Server::Server(int _port
                , const QString &_dbName
                , const QString &_dbUserName
                , const QString &_dbPassword
+               , ILogger *_logger
                )
     : port(_port)
     , address(_address)
@@ -44,6 +76,7 @@ Server::Server(int _port
     , dbUserName(_dbUserName)
     , dbName(_dbName)
     , dbPassword(_dbPassword)
+    , logger(_logger)
 {}
 
 //void Server::sendToClient(QString message)

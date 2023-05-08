@@ -4,6 +4,7 @@
 #include <QSqlDatabase>
 #include <QTcpServer>
 
+class ILogger;
 class QSettings;
 
 
@@ -13,6 +14,7 @@ class Server : QTcpServer
 
 public:
     Server();
+    explicit Server(ILogger *logger);
     Server(int port, const QHostAddress &address);
     Server(const QString &dbDriver
            , const QString &dbHost
@@ -27,8 +29,10 @@ public:
            , const QString &dbName
            , const QString &dbUserName
            , const QString &dbPassword
+           , ILogger *logger
            );
 
+    void run();
 public slots:
     void incomingConnection(qintptr socketDescriptor);
     void slotReadyRead();
@@ -48,6 +52,8 @@ private:
     QString dbName;
     QString dbUserName;
     QString dbPassword;
+
+    ILogger *logger;
 
 //    QSqlDatabase database;
 };
