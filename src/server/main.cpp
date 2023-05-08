@@ -8,7 +8,10 @@ int main(int argc, char** argv)
 {
     QCoreApplication app(argc, argv);
 
-   Server server;
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "myCompany", "testTask");
+
+
+    Server server;
 
 
     return app.exec();
