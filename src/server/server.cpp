@@ -74,58 +74,64 @@ void Server::run()
         logger->critical("Database opeen error.");
 }
 
-//void Server::sendToClient(QString message)
-//{
-//    buffer.clear();
+void Server::incomingConnection(qintptr socketDescriptor)
+{
+    auto socket = new QTcpSocket();
+    socket->setSocketDescriptor(socketDescriptor);
+    connect(socket, SIGNAL (readyRead()), this, SLOT (handleRequest()));
+    connect(socket, SIGNAL (disconnect()), socket, SLOT (deleteLater()));
 
-//    QDataStream out(&buffer, QIODevice::WriteOnly);
-//    out.setVersion(QDataStream::Qt_5_15); //mark how works this
-//    out << quint16(0) << message;
-//    out.device()->seek(0);
-//    out << quint16(buffer.size() - sizeof(quint16));
-//    for (QTcpSocket *socket : sockets) {
-//        socket->write(buffer);
-//    }
-//}
+    sockets.push_back(socket);
+    logger->info("Socket " + QString::number(socketDescriptor) + " connected.");
+}
 
-//void Server::incomingConnection(qintptr socketDescriptor)
-//{
-//    socket = new QTcpSocket();
-//    socket->setSocketDescriptor(socketDescriptor);
-//    connect(socket, SIGNAL (readyRead()), this, SLOT (slotReadyRead()));
-//    connect(socket, SIGNAL (disconnect()), socket, SLOT (deleteLater()));
+void Server::handleRequest()
+{
+    QTcpSocket *socket = (QTcpSocket *) sender();
+    quint16 messageSize = 0;
 
-//    sockets.push_back(socket);
-//    qDebug() << "socket " << socketDescriptor << " connected." << Qt::endl;
-//}
+    QDataStream in(socket);
+    in.setVersion(QDataStream::Qt_5_15);
+    if (in.status() == QDataStream::Ok) { // maybe error version (a.k.a. else{}) at first?
+        logger->info("Read " + QString::number(socket->socketDescriptor()) + " socket");
 
-//void Server::slotReadyRead()
-//{
-//    socket = (QTcpSocket *) sender();
+        for (;;) {
+            if (messageSize == 0) {
+                if (socket->bytesAvailable() < 2) { //TODO: rename 2
+                    break; // should it be here?
+                }
+                in >> messageSize;
+            }
+            if (socket->bytesAvailable() < messageSize) {
+                break; // should it be here?
+            }
+            QString request;
+            in >> request;
+            messageSize = 0; // warning:
 
-//    QDataStream in(socket);
-//    in.setVersion(QDataStream::Qt_5_15);
-//    if (in.status() == QDataStream::Ok) {
-//        qDebug() << Qt::endl << "read...";
+            QString response = execute(request);
+            send(socket, response);
+            break; // should it be here?
+        }
+    } else {
+        logger->critical("Datastream error at reading data from socket.");
+    }
+}
 
-//        for (;;) {
-//            if (bufferMessageBlockSize == 0) {
-//                if (socket->bytesAvailable() < 2) { //TODO: rename 2
-//                    break;
-//                }
-//                in >> bufferMessageBlockSize;
-//            }
-//            if (socket->bytesAvailable() < bufferMessageBlockSize) {
-//                break;
-//            }
-//            QString inputString;
-//            in >> inputString;
-//            bufferMessageBlockSize = 0;
-//            sendToClient(inputString);
-//            qDebug() << Qt::endl << " message: " << inputString;
-//            break;
-//        }
-//    } else {
-//        qDebug() << Qt::endl << "datastream error.";
-//    }
-//}
+QString Server::execute(const QString &request)
+{
+
+}
+
+void Server::send(QTcpSocket *socket, const QString &data)
+{
+    QByteArray buffer;
+    QDataStream out(&buffer, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_15);
+    out << quint16(0) << data; // TODO: refactor output
+    out.device()->seek(0);
+    out << quint16(buffer.size() - sizeof(quint16));
+    out << data;
+    socket->write(buffer);
+    logger->info("Send data to " + QString::number(socket->socketDescriptor()) + " socket.");
+}

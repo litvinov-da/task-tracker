@@ -37,9 +37,12 @@ public:
 
 public slots:
     void incomingConnection(qintptr socketDescriptor);
-    void slotReadyRead();
+    void handleRequest();
 
 private:
+    QString execute(const QString &request);
+    void send(QTcpSocket *socket, const QString &data);
+
     QHostAddress address        {QHostAddress::Any};
     int port                    {2323};
     QVector <QTcpSocket *> sockets{};
