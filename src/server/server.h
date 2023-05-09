@@ -4,9 +4,10 @@
 #include <QSqlDatabase>
 #include <QTcpServer>
 
+#include "consolelogger.h"
+
 class ILogger;
 class QSettings;
-
 
 class Server : QTcpServer
 {
@@ -33,29 +34,24 @@ public:
            );
 
     void run();
+
 public slots:
     void incomingConnection(qintptr socketDescriptor);
     void slotReadyRead();
 
 private:
-    QHostAddress address;
-    int port;
+    QHostAddress address        {QHostAddress::Any};
+    int port                    {2323};
+    QVector <QTcpSocket *> sockets{};
 
-//    //TODO: refactor: change the order and make blacks
-//    QVector <QTcpSocket *>  sockets;
-//    QByteArray buffer;
-//    void sendToClient(QString message);
-//    quint16 bufferMessageBlockSize;
+    QString dbDriver            {"QPSQL"};
+    QString dbHost              {"localhost"};
+    QString dbName              {"server"};
+    QString dbUserName          {"server"};
+    QString dbPassword          {"passwordserver"};
+    QSqlDatabase db             {};
 
-    QString dbDriver;
-    QString dbHost;
-    QString dbName;
-    QString dbUserName;
-    QString dbPassword;
-
-    ILogger *logger;
-
-//    QSqlDatabase database;
+    ILogger *logger             {new ConsoleLogger()};
 };
 
 #endif // SERVER_H

@@ -5,10 +5,14 @@
 
 class ConsoleLogger : public ILogger
 {
-    QTextStream out;
+    static void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 public:
     ConsoleLogger();
-    void log(const QLoggingCategory &category, const QString &msg) override;
+
+    void debug(const QString &msg) override;
+    void info(const QString &msg) override;
+    void warning(const QString &msg) override;
+    void critical(const QString &msg) override;
 };
 
 #endif // CONSOLELOGGER_H

@@ -17,7 +17,10 @@ class ILogger
 {
 public:
     virtual ~ILogger() = default;
-    virtual void log(const QLoggingCategory &category, const QString &msg) = 0;
+    virtual void debug(const QString &msg) = 0;
+    virtual void info(const QString &msg) = 0;
+    virtual void warning(const QString &msg) = 0;
+    virtual void critical(const QString &msg) = 0;
 };
 
 #endif // LOGGER_H

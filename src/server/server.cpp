@@ -12,36 +12,15 @@
 #include "consolelogger.h"
 
 Server::Server()
-    : port(2323)
-    , address(QHostAddress::Any)
-    , dbDriver("QPSQL")
-    , dbHost("localhost")
-    , dbUserName("server")
-    , dbName("server")
-    , dbPassword("passwordserver")
-    , logger(new ConsoleLogger())
 {}
 
 Server::Server(ILogger *_logger)
-    : port(2323)
-    , address(QHostAddress::Any)
-    , dbDriver("QPSQL")
-    , dbHost("localhost")
-    , dbUserName("server")
-    , dbName("server")
-    , dbPassword("passwordserver")
-    , logger(_logger)
+    : logger(_logger)
 {}
 
 Server::Server(int _port, const QHostAddress &_address)
     : port(_port)
     , address(_address)
-    , dbDriver("QPSQL")
-    , dbHost("localhost")
-    , dbUserName("server")
-    , dbName("server")
-    , dbPassword("passwordserver")
-    , logger(new ConsoleLogger())
 {}
 
 Server::Server(const QString &_dbDriver
@@ -50,14 +29,11 @@ Server::Server(const QString &_dbDriver
                , const QString &_dbUserName
                , const QString &_dbPassword
                )
-    : port(2323)
-    , address(QHostAddress::Any)
-    , dbDriver(_dbDriver)
+    : dbDriver(_dbDriver)
     , dbHost(_dbHost)
     , dbUserName(_dbUserName)
     , dbName(_dbName)
     , dbPassword(_dbPassword)
-    , logger(new ConsoleLogger())
 {}
 
 Server::Server(int _port
@@ -78,6 +54,25 @@ Server::Server(int _port
     , dbPassword(_dbPassword)
     , logger(_logger)
 {}
+
+void Server::run()
+{
+    if (this->listen(address, port))
+        logger->info("Server listens " + address.toString() + " address, " + port + " port.");
+    else
+        logger->critical("Socket listening error.");
+
+    db = QSqlDatabase::addDatabase(dbDriver);
+    db.setHostName(dbHost);
+    db.setDatabaseName(dbName);
+    db.setUserName(dbUserName);
+    db.setPassword(dbPassword);
+
+    if (db.open())
+        logger->info("Server opens " + db.databaseName() + " database");
+    else
+        logger->critical("Database opeen error.");
+}
 
 //void Server::sendToClient(QString message)
 //{
