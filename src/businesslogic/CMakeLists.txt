@@ -1,14 +1,11 @@
-find_package(Qt5 REQUIRED COMPONENTS Core)
-
 set(SOURCES
-    employee.cpp
-    employee.h
-    task.cpp
-    task.h
+    actionCode.h
     )
 
-add_library(business_logic
+add_library(actionCode
     ${SOURCES}
     )
 
-target_link_libraries(business_logic PRIVATE Qt5::Core)
+set_target_properties(actionCode PROPERTIES LINKER_LANGUAGE CXX)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
