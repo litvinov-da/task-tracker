@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent, const QString &hostName, quint16 port)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , employeesList(new QListWidget(this))
+    , newTaskDialog(this)
     , socket(new QTcpSocket(this))
 {
     ui->setupUi(this);
@@ -13,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent, const QString &hostName, quint16 port)
     socket->connectToHost(hostName, port);
     connect(socket, &QIODevice::readyRead, this, &MainWindow::getResponse);
     connect(socket, &QTcpSocket::disconnected, socket, &QTcpSocket::deleteLater);
+
+    connect(&newTaskDialog, SIGNAL (clicked()), this, SLOT (createTask()));
 
     sendRequest(action::getAllEmployeesCode);
 }
@@ -70,10 +73,7 @@ void MainWindow::dispatchResponse(QStringList response)
         showAllEmployees(response);
         break;
     case createTaskCode:
-        createTask();
-        break;
-    case deleteTaskCode:
-        deleteTask(response);
+        newTaskDialog.show();
         break;
     }
 }
@@ -84,4 +84,12 @@ void MainWindow::showAllEmployees(const QStringList &employeesInformation)
         QString fullNameEmployee = employeesInformation.at(i);
         this->employeesList->addItem(fullNameEmployee);
     }
+}
+
+void MainWindow::createTask()
+{
+    CreateNewTaskDialog *newTaskDialog = (CreateNewTaskDialog *)sender();
+    QString requestData;
+    // write request initialization
+    sendRequest(action::createTaskCode, requestData);
 }

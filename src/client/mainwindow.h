@@ -7,6 +7,8 @@
 
 #include "../businesslogic/actionCode.h"
 
+#include "createnewtaskdialog.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -26,14 +28,15 @@ private:
     void dispatchResponse(QStringList response);
 
     void showAllEmployees(const QStringList &employeesInformation);
-    void createTask();
-    void deleteTask(const QStringList &employeesInformation);
 
     Ui::MainWindow *ui;
     QListWidget *employeesList;
+    CreateNewTaskDialog newTaskDialog;
 
     QTcpSocket *socket;
 
+private slots:
+    void createTask();
 };
 
 #endif // MAINWINDOW_H
