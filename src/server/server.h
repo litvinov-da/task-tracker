@@ -32,6 +32,7 @@ public:
            , const QString &dbPassword
            , ILogger *logger
            );
+    ~Server();
 
     void run();
 
@@ -40,8 +41,12 @@ public slots:
     void handleRequest();
 
 private:
-    QString execute(const QString &request);
-    void send(QTcpSocket *socket, const QString &data);
+    void sendResponse(QTcpSocket *socket, const QString &data);
+    QString execute(QStringList request);
+
+    QString getAllEmployees(const QStringList &employeesInformation);
+    void insertTask(const QStringList &employeesInformation);
+    void deleteTaskById(const QStringList &employeesInformation);
 
     QHostAddress address        {QHostAddress::Any};
     int port                    {2323};

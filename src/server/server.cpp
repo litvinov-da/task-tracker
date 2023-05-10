@@ -11,6 +11,8 @@
 
 #include "consolelogger.h"
 
+#include "../businesslogic/actionCode.h"
+
 Server::Server()
 {}
 
@@ -55,6 +57,11 @@ Server::Server(int _port
     , logger(_logger)
 {}
 
+Server::~Server()
+{
+    delete logger;
+}
+
 void Server::run()
 {
     if (this->listen(address, port))
@@ -92,38 +99,33 @@ void Server::handleRequest()
 
     QDataStream in(socket);
     in.setVersion(QDataStream::Qt_5_15);
-    if (in.status() == QDataStream::Ok) { // maybe error version (a.k.a. else{}) at first?
+    if (in.status() == QDataStream::Ok) {
         logger->info("Read " + QString::number(socket->socketDescriptor()) + " socket");
 
         for (;;) {
             if (messageSize == 0) {
-                if (socket->bytesAvailable() < 2) { //TODO: rename 2
-                    break; // should it be here?
+                if (socket->bytesAvailable() < 2) {
+                    break;
                 }
                 in >> messageSize;
             }
             if (socket->bytesAvailable() < messageSize) {
-                break; // should it be here?
+                break;
             }
             QString request;
             in >> request;
-            messageSize = 0; // warning:
+            messageSize = 0;
 
-            QString response = execute(request);
-            send(socket, response);
-            break; // should it be here?
+            QString response = execute(request.split(" "));
+            sendResponse(socket, response);
+            break;
         }
     } else {
         logger->critical("Datastream error at reading data from socket.");
     }
 }
 
-QString Server::execute(const QString &request)
-{
-
-}
-
-void Server::send(QTcpSocket *socket, const QString &data) //rename data par
+void Server::sendResponse(QTcpSocket *socket, const QString &data) //rename data par
 {
     QByteArray buffer;
     QDataStream out(&buffer, QIODevice::WriteOnly);
@@ -134,4 +136,54 @@ void Server::send(QTcpSocket *socket, const QString &data) //rename data par
     out << data;
     socket->write(buffer);
     logger->info("Send data to " + QString::number(socket->socketDescriptor()) + " socket.");
+}
+
+QString Server::execute(QStringList request)
+{
+    int code = request.at(0).toInt();
+    request.removeFirst();
+    if (code == getAllEmployeesCode) {
+        return getAllEmployees(request);
+    } else if (code == createTaskCode) {
+        insertTask(request);
+        return {};
+    } else if (code == deleteTaskCode) {
+        deleteTaskById(request);
+        return {};
+    }
+}
+
+QString Server::getAllEmployees(const QStringList &employeesInformation)
+{
+    QString response;
+    QSqlQueryModel employees;
+    employees.setQuery("SELECT * FROM employees");
+    for (int i = 0; i < employees.rowCount(); ++i) {
+            response += employees.record(i).value("id").toString();
+            response += employees.record(i).value("full_name").toString();
+            response += employees.record(i).value("position").toString();
+    }
+    return response;
+}
+
+void Server::insertTask(const QStringList &employeesInformation)
+{
+    QSqlQuery insertQuery;
+    insertQuery.prepare(
+                "INSERT INTO tasks (name, overdue, status, responsible) "
+                "VALUES (:name, :ovedue, :status, :responsible)"
+                );
+    insertQuery.bindValue(":name", employeesInformation.at(0));
+    insertQuery.bindValue(":overdue", employeesInformation.at(1));
+    insertQuery.bindValue(":status", employeesInformation.at(2));
+    insertQuery.bindValue("responsible", employeesInformation.at(3));
+    insertQuery.exec();
+}
+
+void Server::deleteTaskById(const QStringList &employeesInformation)
+{
+    QSqlQuery deleteQuery;
+    deleteQuery.prepare("DELETE FROM tasks WHERE id = :id");
+    deleteQuery.bindValue(":id", employeesInformation.at(0));
+    deleteQuery.exec();
 }
