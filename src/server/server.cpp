@@ -123,7 +123,7 @@ QString Server::execute(const QString &request)
 
 }
 
-void Server::send(QTcpSocket *socket, const QString &data)
+void Server::send(QTcpSocket *socket, const QString &data) //rename data par
 {
     QByteArray buffer;
     QDataStream out(&buffer, QIODevice::WriteOnly);

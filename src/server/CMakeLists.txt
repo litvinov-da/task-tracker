@@ -1,9 +1,11 @@
-find_package(Qt5 REQUIRED COMPONENTS Core Sql Test Network)
+find_package(Qt5 REQUIRED COMPONENTS Core Sql Network)
 
 set(SOURCES "main.cpp"
     "server.cpp"
     "server.h"
     "logger.h"
+    "loggingcategories.h"
+    "loggingcategories.cpp"
     "consolelogger.cpp"
     "consolelogger.h"
     )
