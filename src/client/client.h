@@ -19,13 +19,24 @@ public slots:
     void getResponse();
 
 private:
-    void sendRequest(const QString &request);
-    void updateWidgets(const QString &dataChanges);
-    void getAllEmployees();
+    enum action
+    {
+        getAllEmployeesCode, createEmployeeCode, deleteEmployeeCode, createTaskCode, deleteTaskCode
+    };
+
+    void sendRequest(action code, const QString &data = {});
+    void dispatchResponse(QStringList response);
+
+    void showAllEmployees(const QStringList &employeesInformation);
+    void createEmployee();
+    void deleteEmployee(const QStringList &employeesInformation);
+    void createTask();
+    void deleteTask(const QStringList &employeesInformation);
 
     Ui::MainWindow *ui;
 
     QTcpSocket *socket;
+
 };
 
 #endif // MAINWINDOW_H

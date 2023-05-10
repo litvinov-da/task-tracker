@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QListView" name="listView"/>
+     <widget class="QListView" name="employeesList"/>
     </item>
    </layout>
   </widget>
