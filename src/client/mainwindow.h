@@ -5,6 +5,8 @@
 #include <QMainWindow>
 #include <QTcpSocket>
 
+#include "../businesslogic/actionCode.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -20,11 +22,6 @@ public slots:
     void getResponse();
 
 private:
-    enum action
-    {
-        getAllEmployeesCode, createTaskCode, deleteTaskCode
-    };
-
     void sendRequest(action code, const QString &data = {});
     void dispatchResponse(QStringList response);
 

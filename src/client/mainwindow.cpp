@@ -1,6 +1,4 @@
-#include "addnewemployeedialog.h"
-#include "client.h"
-#include "ui_mainwindow.h"
+#include "mainwindow.h"
 
 #include <QLabel>
 
@@ -30,23 +28,23 @@ void MainWindow::getResponse()
     quint16 messageSize = 0;
 
     in.setVersion(QDataStream::Qt_5_15);
-    if (in.status() == QDataStream::Ok) { // maybe error version (a.k.a. else{}) at first?
+    if (in.status() == QDataStream::Ok) {
         for (;;) {
             if (messageSize == 0) {
-                if (socket->bytesAvailable() < 2) { //TODO: rename 2
-                    break; // should it be here?
+                if (socket->bytesAvailable() < 2) {
+                    break;
                 }
                 in >> messageSize;
             }
             if (socket->bytesAvailable() < messageSize) {
-                break; // should it be here?
+                break;
             }
             QString response;
             in >> response;
-            messageSize = 0; // warning:
+            messageSize = 0;
 
             dispatchResponse(response.split(" "));
-            break; // should it be here?
+            break;
         }
     }
 }
