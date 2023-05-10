@@ -1,26 +1,30 @@
+#include "addnewemployeedialog.h"
 #include "client.h"
 #include "ui_mainwindow.h"
 
-Client::Client(QWidget *parent, const QString &hostName, quint16 port)
+#include <QLabel>
+
+MainWindow::MainWindow(QWidget *parent, const QString &hostName, quint16 port)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , employeesList(new QListWidget(this))
     , socket(new QTcpSocket(this))
 {
     ui->setupUi(this);
 
     socket->connectToHost(hostName, port);
-    connect(socket, &QIODevice::readyRead, this, &Client::getResponse);
+    connect(socket, &QIODevice::readyRead, this, &MainWindow::getResponse);
     connect(socket, &QTcpSocket::disconnected, socket, &QTcpSocket::deleteLater);
 
     sendRequest(action::getAllEmployeesCode);
 }
 
-Client::~Client()
+MainWindow::~MainWindow()
 {
     delete ui;
 }
 
-void Client::getResponse()
+void MainWindow::getResponse()
 {
     QDataStream in(socket);
     quint16 messageSize = 0;
@@ -47,7 +51,7 @@ void Client::getResponse()
     }
 }
 
-void Client::sendRequest(action code, const QString &data)
+void MainWindow::sendRequest(action code, const QString &data)
 {
     QByteArray buffer;
     QDataStream out(&buffer, QIODevice::WriteOnly);
@@ -59,7 +63,7 @@ void Client::sendRequest(action code, const QString &data)
     socket->write(buffer);
 }
 
-void Client::dispatchResponse(QStringList response)
+void MainWindow::dispatchResponse(QStringList response)
 {
     int code = response.at(0).toInt();
     response.removeFirst();
@@ -67,17 +71,19 @@ void Client::dispatchResponse(QStringList response)
     case getAllEmployeesCode:
         showAllEmployees(response);
         break;
-    case createEmployeeCode:
-        createEmployee();
-        break;
-    case deleteEmployeeCode:
-        deleteEmployee(response);
-        break;
     case createTaskCode:
         createTask();
         break;
     case deleteTaskCode:
         deleteTask(response);
         break;
+    }
+}
+
+void MainWindow::showAllEmployees(const QStringList &employeesInformation)
+{
+    for (int i = 1; i < employeesInformation.size(); i += 2) {
+        QString fullNameEmployee = employeesInformation.at(i);
+        this->employeesList->addItem(fullNameEmployee);
     }
 }

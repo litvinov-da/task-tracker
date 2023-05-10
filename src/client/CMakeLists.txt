@@ -4,7 +4,11 @@ set(SOURCES
     "main.cpp"
     "client.cpp"
     "client.h"
-    "client.ui")
+    "client.ui"
+    "addnewemployeedialog.cpp"
+    "addnewemployeedialog.h"
+    "addnewemployeedialog.ui"
+    )
 
 add_executable(Client
     ${SOURCES}
