@@ -2,9 +2,11 @@ find_package(Qt5 REQUIRED COMPONENTS Core Widgets Network)
 
 set(SOURCES
     "main.cpp"
-    "mainwindow.cpp"
     "mainwindow.h"
     "mainwindow.ui"
+    "mainwindow.cpp"
+    "connectiontoserver.h"
+    "connectiontoserver.cpp"
     )
 
 add_executable(Client
