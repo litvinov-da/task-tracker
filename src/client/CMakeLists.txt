@@ -5,9 +5,6 @@ set(SOURCES
     "mainwindow.cpp"
     "mainwindow.h"
     "mainwindow.ui"
-    "createnewtaskdialog.cpp"
-    "createnewtaskdialog.h"
-    "createnewtaskdialog.ui"
     )
 
 add_executable(Client

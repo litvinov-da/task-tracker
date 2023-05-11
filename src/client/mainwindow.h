@@ -7,11 +7,10 @@
 
 #include "../businesslogic/actionCode.h"
 
-#include "createnewtaskdialog.h"
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
+namespace Ui {
+class MainWindow;
+}
 
 class MainWindow : public QMainWindow
 {
@@ -31,12 +30,10 @@ private:
 
     Ui::MainWindow *ui;
     QListWidget *employeesList;
-    CreateNewTaskDialog newTaskDialog;
 
     QTcpSocket *socket;
 
 private slots:
-    void createTask();
 };
 
 #endif // MAINWINDOW_H
