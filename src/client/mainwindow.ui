@@ -18,6 +18,13 @@
     <item>
      <widget class="QListWidget" name="employees"/>
     </item>
+    <item>
+     <widget class="QPushButton" name="getEmployee">
+      <property name="text">
+       <string>Select employee</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">

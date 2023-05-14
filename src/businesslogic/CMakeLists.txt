@@ -1,5 +1,7 @@
 set(SOURCES
     actionCode.h
+    employeeInfo.h
+    taskInfo.h
     )
 
 add_library(actionCode

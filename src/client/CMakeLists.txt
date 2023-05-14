@@ -5,6 +5,10 @@ set(SOURCES
     "mainwindow.h"
     "mainwindow.ui"
     "mainwindow.cpp"
+    "iemployeedialog.h"
+    "employeedialogwithonetask.h"
+    "employeedialog.ui"
+    "employeedialogwithonetask.cpp"
     "connectiontoserver.h"
     "connectiontoserver.cpp"
     )

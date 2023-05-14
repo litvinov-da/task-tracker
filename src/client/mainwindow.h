@@ -7,6 +7,8 @@
 #include <QMainWindow>
 #include <QTcpSocket>
 
+#include "../businesslogic/employeeInfo.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -24,9 +26,13 @@ private:
     Ui::MainWindow *ui;
 
     ConnectionToServer connectionToServer;
+    QVector<EmployeeInfo> employeesInformation;
 
 signals:
     void initialization();
+
+private slots:
+    void on_getEmployee_clicked();
 };
 
 #endif // MAINWINDOW_H
