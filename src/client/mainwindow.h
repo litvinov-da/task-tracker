@@ -1,11 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "connectiontoserver.h"
-
 #include <QListWidget>
 #include <QMainWindow>
 #include <QTcpSocket>
+
+#include "socketconnection.h"
 
 #include "../businesslogic/employeeInfo.h"
 
@@ -25,7 +25,7 @@ private:
 
     Ui::MainWindow *ui;
 
-    ConnectionToServer connectionToServer;
+    IConnectionToServer *connectionToServer;
     QVector<EmployeeInfo> employeesInformation;
 
 signals:

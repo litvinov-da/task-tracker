@@ -9,8 +9,9 @@ set(SOURCES
     "employeedialogwithonetask.h"
     "employeedialog.ui"
     "employeedialogwithonetask.cpp"
-    "connectiontoserver.h"
-    "connectiontoserver.cpp"
+    "iconnectiontoserver.h"
+    "socketconnection.h"
+    "socketconnection.cpp"
     )
 
 add_executable(Client

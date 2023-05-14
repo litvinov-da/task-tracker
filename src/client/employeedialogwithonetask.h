@@ -1,10 +1,10 @@
 #ifndef EMPLOYEEDIALOG_H
 #define EMPLOYEEDIALOG_H
 
-#include "iemployeedialog.h"
-
 #include <QDialog>
 #include <QQueue>
+
+#include "iemployeedialog.h"
 
 namespace Ui {
 class EmployeeDialog;

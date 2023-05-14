@@ -1,28 +1,28 @@
-#include "connectiontoserver.h"
+#include "socketconnection.h"
 
 #include <QDataStream>
 #include <QTcpSocket>
 
 
-ConnectionToServer::ConnectionToServer(QObject *parent, const QString &_serverHostName, quint16 _serverPort)
-    : QObject{parent}
+SocketConnection::SocketConnection(QObject *parent, const QString &_serverHostName, quint16 _serverPort)
+    : IConnectionToServer(parent)
     , serverHostName(_serverHostName)
     , serverPort(_serverPort)
     , socket(new QTcpSocket(this))
 {
     socket->connectToHost(serverHostName, serverPort);
-    connect(socket, &QTcpSocket::readyRead, this, &ConnectionToServer::getRespond);
+    connect(socket, &QTcpSocket::readyRead, this, &SocketConnection::getRespond);
     connect(socket, &QTcpSocket::disconnected, socket, &QTcpSocket::deleteLater);
 }
 
-QStringList ConnectionToServer::getAllEmployees()
+QStringList SocketConnection::getAllEmployees()
 {
     sendRequest(action::getAllEmployeesCode);
     while (!isBufferRespondReady) {} // TODO: check if isBufferRespondReady will change outside execution flow
     return bufferRespond.split(" ");
 }
 
-void ConnectionToServer::getRespond()
+void SocketConnection::getRespond()
 {
     isBufferRespondReady = false;
     bufferRespond.clear();
@@ -49,7 +49,7 @@ void ConnectionToServer::getRespond()
     }
 }
 
-void ConnectionToServer::sendRequest(action code, const QString &data)
+void SocketConnection::sendRequest(action code, const QString &data)
 {
     QByteArray buffer;
     QDataStream out(&buffer, QIODevice::WriteOnly);

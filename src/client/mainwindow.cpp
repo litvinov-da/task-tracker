@@ -1,14 +1,15 @@
-#include "iemployeedialog.h"
-#include "employeedialogwithonetask.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
+#include "employeedialogwithonetask.h"
+#include "iemployeedialog.h"
 
 #include <QLabel>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , connectionToServer(this)
+    , connectionToServer(new SocketConnection(this))
 {
     ui->setupUi(this);
     connect(this, &MainWindow::initialization, this, &MainWindow::showAllEmployees);

@@ -3,20 +3,22 @@
 
 #include <QObject>
 
+#include "iconnectiontoserver.h"
+
 #include "../businesslogic/actionCode.h"
 
 class QTcpSocket;
 
-class ConnectionToServer : public QObject
+class SocketConnection : public IConnectionToServer
 {
     Q_OBJECT
 public:
-    explicit ConnectionToServer(QObject *parent = nullptr
+    explicit SocketConnection(QObject *parent = nullptr
                                 , const QString &serverHostName = "localhost"
                                 , quint16 serverPort = 2323
                                 );
 
-    QStringList getAllEmployees();
+    QStringList getAllEmployees() override;
 private:
     void getRespond();
     void sendRequest(action code, const QString &data = {});

@@ -125,12 +125,12 @@ void Server::handleRequest()
     }
 }
 
-void Server::sendResponse(QTcpSocket *socket, const QString &data) //rename data par
+void Server::sendResponse(QTcpSocket *socket, const QString &data)
 {
     QByteArray buffer;
     QDataStream out(&buffer, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_15);
-    out << quint16(0) << data; // TODO: refactor output
+    out << quint16(0) << data;
     out.device()->seek(0);
     out << quint16(buffer.size() - sizeof(quint16));
     out << data;

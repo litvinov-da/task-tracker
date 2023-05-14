@@ -2,7 +2,6 @@
 
 #include <QDateTime>
 
-
 void ConsoleLogger::messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QTextStream out(stdout);
